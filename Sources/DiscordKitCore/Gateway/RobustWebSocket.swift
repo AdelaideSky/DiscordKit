@@ -6,7 +6,9 @@
 //
 
 import Foundation
+#if canImport(Reachability)
 import Reachability
+#endif
 #if canImport(Combine)
 import Combine
 #else
@@ -54,7 +56,9 @@ public class RobustWebSocket: NSObject {
     #if canImport(Compression)
     private var decompressor: DecompressionEngine!
     #endif
+    #if canImport(Reachability)
 	private let reachability = try! Reachability()
+    #endif
 
     // Logger instance
     private static let log = Logger(label: "RobustWebSocket", level: nil)
@@ -234,8 +238,9 @@ public class RobustWebSocket: NSObject {
         decompressor = DecompressionEngine()
         #endif
         socket!.resume()
-
+        #if canImport(Reachability)
         setupReachability()
+        #endif
         attachSockReceiveListener()
     }
 
@@ -399,7 +404,7 @@ extension RobustWebSocket: URLSessionWebSocketDelegate {
         reconnect(code: nil)
     }
 }
-
+#if canImport(Reachability)
 // MARK: - Reachability
 public extension RobustWebSocket {
     private func setupReachability() {
@@ -512,7 +517,9 @@ public extension RobustWebSocket {
         connected = false
         sessionID = nil
         seq = nil
+        #if canImport(Reachability)
         reachability.stopNotifier()
+        #endif
 
         socket.cancel(with: code, reason: nil)
     }
