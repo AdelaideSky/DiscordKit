@@ -14,6 +14,7 @@ import Combine
 #else
 import OpenCombine
 import OpenCombineFoundation
+import FoundationNetworking
 #endif
 import Logging
 
