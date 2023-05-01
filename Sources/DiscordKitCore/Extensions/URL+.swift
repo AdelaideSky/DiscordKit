@@ -6,12 +6,18 @@
 //
 
 import Foundation
+#if os(macOS)
 import UniformTypeIdentifiers
+#endif
 
 public extension URL {
 	var mimeType: String {
-		UTType(filenameExtension: self.pathExtension)?.preferredMIMEType ?? "application/octet-stream"
-    }
+		#if os(macOS)
+		return UTType(filenameExtension: self.pathExtension)?.preferredMIMEType ?? "application/octet-stream"
+		#else
+		return "application/octet-stream"
+		#endif
+    	}
 
     /// Appends one or more query items to the URL
     ///
