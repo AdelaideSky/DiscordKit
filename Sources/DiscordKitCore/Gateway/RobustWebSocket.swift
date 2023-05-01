@@ -7,7 +7,8 @@
 
 import Foundation
 import Reachability
-import Combine
+import OpenCombine
+import OpenCombineFoundation
 import Logging
 
 /// A robust WebSocket that handles resuming, reconnection and heartbeats
