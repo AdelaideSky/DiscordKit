@@ -423,7 +423,7 @@ public extension RobustWebSocket {
         do { try reachability.startNotifier() } catch { Self.log.error("Starting reachability notifier failed!") }
     }
 }
-
+#endif
 // MARK: - Heartbeating
 public extension RobustWebSocket {
     @objc private func sendHeartbeat(_ interval: TimeInterval) {
