@@ -7,8 +7,12 @@
 
 import Foundation
 import Reachability
+#if canImport(Combine)
+import Combine
+#else
 import OpenCombine
 import OpenCombineFoundation
+#endif
 import Logging
 
 /// A robust WebSocket that handles resuming, reconnection and heartbeats
@@ -46,7 +50,10 @@ public class RobustWebSocket: NSObject {
     /// be attempted if/when this happens.
     public let onSessionInvalid = EventDispatch<Void>()
 
-    private var session: URLSession!, socket: URLSessionWebSocketTask!, decompressor: DecompressionEngine!
+    private var session: URLSession!, socket: URLSessionWebSocketTask!
+    #if canImport(Compression)
+    private var decompressor: DecompressionEngine!
+    #endif
 	private let reachability = try! Reachability()
 
     // Logger instance
@@ -170,10 +177,12 @@ public class RobustWebSocket: NSObject {
             case .success(let message):
                 do {
                     switch message {
+                        #if canImport(Compression)
                     case .data(let data):
                         if let decompressed = self?.decompressor.push_data(data) {
                             try self?.handleMessage(with: decompressed)
                         } else { Self.log.trace("Decompression did not return any result - compressed packet is not complete") }
+                        #endif
                     case .string(let str): try self?.handleMessage(with: str)
                     @unknown default: Self.log.warning("Unknown sock message case!")
                     }
@@ -221,7 +230,9 @@ public class RobustWebSocket: NSObject {
 
         // Create new instance of decompressor
         // It's best to do it here, before resuming the task since sometimes, messages arrive before the compressor is initialised in the socket open handler.
+        #if canImport(Compression)
         decompressor = DecompressionEngine()
+        #endif
         socket!.resume()
 
         setupReachability()

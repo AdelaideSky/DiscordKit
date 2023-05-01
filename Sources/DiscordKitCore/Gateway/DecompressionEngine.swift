@@ -4,7 +4,7 @@
 //
 //  Created by Vincent Kwok on 13/5/22.
 //
-
+#if canImport(Compression)
 import Foundation
 import Compression
 import Logging
@@ -147,3 +147,4 @@ public extension DecompressionEngine {
         return decompressed
     }
 }
+#endif
